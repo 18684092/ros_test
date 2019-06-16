@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -47,18 +48,24 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
+add_message_files(
+  DIRECTORY
+  msg
+  FILES
+  Num.msg
 #   Message1.msg
 #   Message2.msg
-# )
+)
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
+add_service_files(
+  DIRECTORY
+  srv
+  FILES
+  AddTwoInts2.srv
 #   Service1.srv
 #   Service2.srv
-# )
+)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -68,10 +75,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs
-# )
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -107,6 +114,7 @@ catkin_package(
 #  LIBRARIES ros_test
 #  CATKIN_DEPENDS roscpp rospy std_msgs
 #  DEPENDS system_lib
+CATKIN_DEPENDS message_runtime
 )
 
 ###########
@@ -149,6 +157,22 @@ include_directories(
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
+
+add_executable(andy_talker src/andy_talker.cpp)
+target_link_libraries(andy_talker ${catkin_LIBRARIES})
+add_dependencies(andy_talker ros_test_generate_messages_cpp)
+
+add_executable(andy_listener src/andy_listener.cpp)
+target_link_libraries(andy_listener ${catkin_LIBRARIES})
+add_dependencies(andy_listener ros_test_generate_messages_cpp)
+
+add_executable(andy_server src/andy_server.cpp)
+target_link_libraries(andy_server ${catkin_LIBRARIES})
+add_dependencies(andy_server ros_test_gencpp)
+
+add_executable(andy_client src/andy_client.cpp)
+target_link_libraries(andy_client ${catkin_LIBRARIES})
+add_dependencies(andy_client ros_test_gencpp)
 
 #############
 ## Install ##
